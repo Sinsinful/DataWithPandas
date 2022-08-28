@@ -1,4 +1,5 @@
 from itertools import count
+from platform import platform
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,13 +19,19 @@ data['Critic_Score'] = pd.to_numeric(data['Critic_Score'] ,errors='coerce')
 data = data.replace(np.nan, 0, regex=True)
 data['Critic_Score'] = data['Critic_Score'].astype(float)
 
-#select all games with a user score over 9 and critic score over 90
-results = data[(data['Critic_Score'] >= 90)] 
-results1 = results[(data['User_Score'] >= 9)]
-results2 = results.count()
-
-
-print(results2)
+#select all games and thier publishers with a critic score over 90
+data = data[['Publisher','Name', 'Critic_Score']]
+data = data.query('Critic_Score >  90')
+data['Count'] = data.groupby('Publisher')['Publisher'].transform('count')
+data = data.drop_duplicates(subset=['Publisher'])
+data = data[['Publisher', 'Count']]
+data = data.sort_values(['Count'], ascending = False)
+data = data.head(10)
+data = data.sort_values(['Count'], ascending = True)
+print(data)
+data.plot.barh(x='Publisher', y='Count',
+             title='Most Sucessful Publishers', color='green')
+plt.show()
 
 
 
