@@ -28,9 +28,11 @@ data = data[['Publisher', 'Count']]
 data = data.sort_values(['Count'], ascending = False)
 data = data.head(10)
 data = data.sort_values(['Count'], ascending = True)
-print(data)
+
+#create barchart
 data.plot.barh(x='Publisher', y='Count',
              title='Most Sucessful Publishers', color='green')
+plt.xlabel('Number of games with a rating over 90%')
 plt.show()
 
 
